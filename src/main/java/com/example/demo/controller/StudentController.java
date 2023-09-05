@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class StudentController {
         if (studentService.getStudentByNpm(npm) != null) {
             return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentByNpm(npm));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student Not Found.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Student Not Found."));
         }
     }
 
@@ -41,9 +43,11 @@ public class StudentController {
     @PostMapping("")
     public ResponseEntity addStudent(@RequestBody Student student) {
         if (studentService.addStudent(student)) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Student Added Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student Added Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed Add Student.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Add Student."));
         }
     }
 
@@ -51,9 +55,11 @@ public class StudentController {
     @PutMapping("/{npm}")
     public ResponseEntity updateStudent(@PathVariable String npm, @RequestBody Student student) {
         if (studentService.updateStudent(npm, student)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Updated Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student Updated Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Update Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Update Student."));
         }
     }
 
@@ -61,9 +67,11 @@ public class StudentController {
     @PatchMapping("/{npm}/deactived")
     public ResponseEntity updateActivated(@PathVariable String npm, @RequestBody Student student) {
         if (studentService.updateStatus(npm, student)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Student NPM " + npm + " is deactived.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student NPM " + npm + " is deactived."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student NPM " + npm + " is active.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Student NPM " + npm + " is active."));
         }
     }
 
@@ -71,9 +79,11 @@ public class StudentController {
     @DeleteMapping("/{npm}")
     public ResponseEntity deleteStudent(@PathVariable String npm) {
         if (studentService.deleteStudent(npm)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student Deleted Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Success", "Failed to Delete Student."));
         }
     }
 }

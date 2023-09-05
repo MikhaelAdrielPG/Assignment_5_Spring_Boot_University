@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Course;
 import com.example.demo.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class CourseController {
         if (courseService.getCourseById(id) != null) {
             return ResponseEntity.status(HttpStatus.OK).body(courseService.getCourseById(id));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Course Not Found.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Course Not Found."));
         }
     }
 
@@ -41,9 +43,11 @@ public class CourseController {
     @PostMapping("")
     public ResponseEntity addCourse(@RequestBody Course course) {
         if (courseService.addCourse(course)) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Course Added Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Course Added Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed Added Course.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Success", "Failed to Added Course."));
         }
     }
 
@@ -51,9 +55,11 @@ public class CourseController {
     @PutMapping("/{id}")
     public ResponseEntity updateCourse(@PathVariable long id, @RequestBody Course course) {
         if (courseService.updateCourse(id,course)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Updated Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Course Updated Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Update Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Update Course."));
         }
     }
 
@@ -61,9 +67,11 @@ public class CourseController {
     @PatchMapping("/{id}/deactived")
     public ResponseEntity updateActivated(@PathVariable long id, @RequestBody Course course) {
         if (courseService.updateStatus(id,course)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Course ID " + id + " is deactived.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Course ID " + id + " is deactived."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Course ID " + id + " is active.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Course ID " + id + " is active."));
         }
     }
 
@@ -71,9 +79,11 @@ public class CourseController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteCourse(@PathVariable long id) {
         if (courseService.deleteCourse(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Course Deleted Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Delete Course."));
         }
     }
 }

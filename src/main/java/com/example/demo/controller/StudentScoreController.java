@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.ApiResponse;
 import com.example.demo.model.StudentScore;
 import com.example.demo.service.StudentScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ public class StudentScoreController {
         if (studentScoreService.getStudentScoreById(id) != null) {
             return ResponseEntity.status(HttpStatus.OK).body(studentScoreService.getStudentScoreById(id));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student Score Not Found.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Student Score Not Found."));
         }
     }
 
@@ -40,9 +42,11 @@ public class StudentScoreController {
     @PostMapping("")
     public ResponseEntity addStudentScore(@RequestBody StudentScore studentScore) {
         if (studentScoreService.addStudentScore(studentScore)) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Student Score Added Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student Score Added Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed Add Student Score.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Add Student Score."));
         }
     }
 
@@ -50,9 +54,11 @@ public class StudentScoreController {
     @PutMapping("/grade/{id}")
     public ResponseEntity updateDataStudentScore(@PathVariable int id, @RequestBody StudentScore studentScore) {
         if (studentScoreService.updateStudentScore(id, studentScore)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Updated Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student Score Updated Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Update Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Update Student Score."));
         }
     }
 
@@ -60,9 +66,11 @@ public class StudentScoreController {
     @PatchMapping("/{id}/deactived")
     public ResponseEntity updateActiveStudentScore(@PathVariable int id, @RequestBody StudentScore studentScore) {
         if (studentScoreService.updateStatusStudentScore(id, studentScore)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Student Score ID " + id + " is deactived.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Student Score ID " + id + " is deactived."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student Score ID " + id + " is active.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Success", "Student Score ID " + id + " is active."));
         }
     }
 }

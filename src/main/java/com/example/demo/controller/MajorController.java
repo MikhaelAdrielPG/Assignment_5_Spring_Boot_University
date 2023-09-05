@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Major;
 import com.example.demo.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ public class MajorController {
     // Endpoint untuk mengambil daftar semua jurusan
     @GetMapping("")
     public ResponseEntity getMajors() {
-        return ResponseEntity.status(HttpStatus.OK).body(majorService.majorList());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(majorService.majorList());
     }
 
     // Endpoint untuk mengambil jurusan berdasarkan ID
@@ -27,7 +29,8 @@ public class MajorController {
         if (majorService.getMajorById(id) != null) {
             return ResponseEntity.status(HttpStatus.OK).body(majorService.getMajorById(id));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Major Not Found."));
         }
     }
 
@@ -35,9 +38,11 @@ public class MajorController {
     @PostMapping("")
     public ResponseEntity addMajor(@RequestBody Major major) {
         if (majorService.addMajor(major)) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Major Added Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Major Added Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to Add Major.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Add Major."));
         }
     }
 
@@ -45,9 +50,11 @@ public class MajorController {
     @PutMapping("/{id}")
     public ResponseEntity updateMajor(@PathVariable long id, @RequestBody Major major) {
         if (majorService.updateMajor(id, major)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Updated Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Major Updated Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Update Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Update Major."));
         }
     }
 
@@ -55,9 +62,11 @@ public class MajorController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteMajor(@PathVariable long id) {
         if (majorService.deleteMajor(id)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Deleted Successfully.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse("Success", "Major Deleted Successfully."));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Delete Failed.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failed", "Failed to Delete Major."));
         }
     }
 }

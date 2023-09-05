@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.StudentScore;
 import com.example.demo.repository.CourseInterface;
-import com.example.demo.repository.ScoreInterface;
+import com.example.demo.repository.StudentScoreInterface;
 import com.example.demo.repository.StudentInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class StudentScoreService {
     @Autowired
-    private ScoreInterface studentScoreInterface;
+    private StudentScoreInterface studentScoreInterface;
     @Autowired
     private StudentInterface studentInterface;
     @Autowired
