@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "student_course")
+@Table(name = "student_score")
 public class StudentScore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,6 @@ public class StudentScore {
     private Integer quiz2; // Nilai ujian quiz 2
     private Integer quiz3; // Nilai ujian quiz 3
     private Integer quiz4; // Nilai ujian quiz 4
-
     private Integer quiz5; // Nilai ujian quiz 5
     private Integer midtest; // Nilai ujian tengah semester
     private Integer finaltest; // Nilai ujian akhir semester

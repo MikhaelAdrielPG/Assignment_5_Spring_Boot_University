@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Student;
-import com.example.demo.repository.MajorInterface;
-import com.example.demo.repository.StudentInterface;
+import com.example.demo.repository.MajorRepository;
+import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +12,15 @@ import java.util.List;
 @Service
 public class StudentService {
     @Autowired
-    private StudentInterface studentInterface;
+    private StudentRepository studentRepository;
     @Autowired
-    private MajorInterface majorInterface;
+    private MajorRepository majorRepository;
 
     // Fungsi untuk mendapatkan daftar mahasiswa yang valid
     public List<Student> studentList() {
         List<Student> filteredStudents = new ArrayList<>();
 
-        for (Student student : studentInterface.findAll()) {
+        for (Student student : studentRepository.findAll()) {
             if (student.isExist()) {
                 filteredStudents.add(student);
             }
@@ -31,9 +31,9 @@ public class StudentService {
 
     // Fungsi untuk mendapatkan mahasiswa berdasarkan NPM
     public Student getStudentByNpm(String npm) {
-        if (studentInterface.findById(npm).orElse(null) != null
-                && studentInterface.findById(npm).orElse(null).isExist()) {
-            return studentInterface.findById(npm).orElse(null);
+        if (studentRepository.findById(npm).orElse(null) != null
+                && studentRepository.findById(npm).orElse(null).isExist()) {
+            return studentRepository.findById(npm).orElse(null);
         } else {
             return null;
         }
@@ -41,37 +41,37 @@ public class StudentService {
 
     // Fungsi untuk menambahkan mahasiswa baru jika data valid
     public boolean addStudent(Student student) {
-        if (majorInterface.findById(student.getMajor().getId()).orElse(null) == null) {
+        if (majorRepository.findById(student.getMajor().getId()).orElse(null) == null) {
             return false;
         } else if (isNameNotValid(student.getName())) {
             return false;
         } else if (isNpmNotValid(student.getNpm())) {
             return false;
         } else {
-            student.setMajor(majorInterface.findById(student.getMajor().getId()).orElse(null));
-            studentInterface.save(student);
+            student.setMajor(majorRepository.findById(student.getMajor().getId()).orElse(null));
+            studentRepository.save(student);
             return true;
         }
     }
 
     // Fungsi untuk memperbarui data mahasiswa berdasarkan NPM
     public boolean updateStudent(String npm, Student student) {
-        if (studentInterface.findById(npm).orElse(null) == null) {
+        if (studentRepository.findById(npm).orElse(null) == null) {
             return false;
         } else if (isNameNotValid(student.getName())) {
             return false;
         } else {
-            studentInterface.findById(npm).orElse(null).setName(student.getName());
-            studentInterface.save(studentInterface.findById(npm).orElse(null));
+            studentRepository.findById(npm).orElse(null).setName(student.getName());
+            studentRepository.save(studentRepository.findById(npm).orElse(null));
             return true;
         }
     }
 
     // Fungsi untuk memperbarui status mahasiswa berdasarkan NPM
-    public boolean updateStatus(String npm, Student student) {
-        if (studentInterface.findById(npm).orElse(null) != null) {
-            studentInterface.findById(npm).orElse(null).setActive(student.isActive());
-            studentInterface.save(studentInterface.findById(npm).orElse(null));
+    public boolean updateActiveStatus(String npm, Student student) {
+        if (studentRepository.findById(npm).orElse(null) != null) {
+            studentRepository.findById(npm).orElse(null).setActive(student.isActive());
+            studentRepository.save(studentRepository.findById(npm).orElse(null));
             return true;
         } else {
             return false;
@@ -80,9 +80,9 @@ public class StudentService {
 
     // Fungsi untuk menghapus mahasiswa berdasarkan NPM
     public boolean deleteStudent(String npm) {
-        if (studentInterface.findById(npm).orElse(null) != null) {
-            studentInterface.findById(npm).orElse(null).delete();
-            studentInterface.save(studentInterface.findById(npm).orElse(null));
+        if (studentRepository.findById(npm).orElse(null) != null) {
+            studentRepository.findById(npm).orElse(null).delete();
+            studentRepository.save(studentRepository.findById(npm).orElse(null));
             return true;
         } else {
             return false;

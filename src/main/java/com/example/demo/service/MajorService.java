@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Major;
-import com.example.demo.repository.MajorInterface;
+import com.example.demo.repository.MajorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +11,13 @@ import java.util.List;
 @Service
 public class MajorService {
     @Autowired
-    private MajorInterface majorInterface;
+    private MajorRepository majorRepository;
 
     // Fungsi untuk mendapatkan daftar jurusan yang valid
     public List<Major> majorList() {
         List<Major> filteredMajors = new ArrayList<>();
 
-        for (Major major : majorInterface.findAll()) {
+        for (Major major : majorRepository.findAll()) {
             if (major.isExist()) {
                 filteredMajors.add(major);
             }
@@ -28,9 +28,9 @@ public class MajorService {
 
     // Fungsi untuk mendapatkan jurusan berdasarkan ID
     public Major getMajorById(long id) {
-        if (majorInterface.findById(id).orElse(null) != null
-                && majorInterface.findById(id).orElse(null).isExist()) {
-            return majorInterface.findById(id).orElse(null);
+        if (majorRepository.findById(id).orElse(null) != null
+                && majorRepository.findById(id).orElse(null).isExist()) {
+            return majorRepository.findById(id).orElse(null);
         } else {
             return null;
         }
@@ -39,7 +39,7 @@ public class MajorService {
     // Fungsi untuk menambahkan jurusan baru jika nama valid
     public boolean addMajor(Major major) {
         if (isNameValid(major.getName())) {
-            majorInterface.save(major);
+            majorRepository.save(major);
             return true;
         } else {
             return false;
@@ -50,7 +50,7 @@ public class MajorService {
     public boolean updateMajor(Long id, Major major) {
         if (getMajorById(id) != null || isNameValid(major.getName())) {
             getMajorById(id).setName(major.getName());
-            majorInterface.save(getMajorById(id));
+            majorRepository.save(getMajorById(id));
             return true;
         } else {
             return false;
@@ -59,9 +59,9 @@ public class MajorService {
 
     // Fungsi untuk menghapus jurusan berdasarkan ID
     public boolean deleteMajor(Long id) {
-        if (majorInterface.findById(id).orElse(null) != null) {
-            majorInterface.findById(id).orElse(null).delete();
-            majorInterface.save(majorInterface.findById(id).orElse(null));
+        if (majorRepository.findById(id).orElse(null) != null) {
+            majorRepository.findById(id).orElse(null).delete();
+            majorRepository.save(majorRepository.findById(id).orElse(null));
             return true;
         } else {
             return false;

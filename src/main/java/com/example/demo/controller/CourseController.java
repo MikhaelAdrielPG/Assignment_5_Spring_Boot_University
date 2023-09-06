@@ -65,13 +65,13 @@ public class CourseController {
 
     // Endpoint untuk menonaktifkan kursus berdasarkan ID
     @PatchMapping("/{id}/deactived")
-    public ResponseEntity updateActivated(@PathVariable long id, @RequestBody Course course) {
+    public ResponseEntity updateActiveStatus(@PathVariable long id, @RequestBody Course course) {
         if (courseService.updateStatus(id,course)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse("Success", "Course ID " + id + " is deactived."));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("Failed", "Course ID " + id + " is active."));
+                    .body(new ApiResponse("Failed", "Course ID " + id + " not found."));
         }
     }
 

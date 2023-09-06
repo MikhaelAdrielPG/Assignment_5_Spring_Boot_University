@@ -65,13 +65,13 @@ public class StudentController {
 
     // Endpoint untuk menonaktifkan mahasiswa berdasarkan NPM
     @PatchMapping("/{npm}/deactived")
-    public ResponseEntity updateActivated(@PathVariable String npm, @RequestBody Student student) {
-        if (studentService.updateStatus(npm, student)) {
+    public ResponseEntity updateActiveStatus(@PathVariable String npm, @RequestBody Student student) {
+        if (studentService.updateActiveStatus(npm, student)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse("Success", "Student NPM " + npm + " is deactived."));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse("Failed", "Student NPM " + npm + " is active."));
+                    .body(new ApiResponse("Failed", "Student NPM " + npm + " not found."));
         }
     }
 
