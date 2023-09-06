@@ -6,9 +6,13 @@ import com.example.demo.service.StudentScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/student-scores")
@@ -18,28 +22,26 @@ public class StudentScoreController {
 
     // Endpoint daftar semua skor siswa
     @GetMapping("")
-    public ResponseEntity getStudentScores() {
-        List<StudentScore> studentScores = studentScoreService.studentScoreList();
-        return ResponseEntity.status(HttpStatus.OK).body(studentScores);
+    public ResponseEntity getStudentScore() {
+        return ResponseEntity.status(HttpStatus.OK).body(studentScoreService.studentScoreList());
     }
 
     // Endpoint skor siswa berdasarkan ID
     @GetMapping("/{id}")
-    public ResponseEntity getStudentScoreById(@PathVariable long id) {
-        StudentScore studentScore = studentScoreService.getStudentScoreById(id);
-        if (studentScore != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(studentScore);
+    public ResponseEntity getStudentScoreById(@PathVariable int id) {
+        if (studentScoreService.getStudentScoreById(id) != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(studentScoreService.getStudentScoreById(id));
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Student Score Not Found."));
         }
     }
 
     // Endpoint Menambahkan skor siswa baru
     @PostMapping("")
-    public ResponseEntity registerStudentScore(@RequestBody StudentScore studentScore) {
+    public ResponseEntity addStudentScore(@RequestBody StudentScore studentScore) {
         if (studentScoreService.addStudentScore(studentScore)) {
-            return ResponseEntity.status(HttpStatus.CREATED)
+            return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse("Success", "Student Score Added Successfully."));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -48,8 +50,8 @@ public class StudentScoreController {
     }
 
     // Endpoint memperbarui data skor siswa berdasarkan ID
-    @PutMapping("/{id}")
-    public ResponseEntity updateStudentScore(@PathVariable long id, @RequestBody StudentScore studentScore) {
+    @PutMapping("/grade/{id}")
+    public ResponseEntity updateDataStudentScore(@PathVariable int id, @RequestBody StudentScore studentScore) {
         if (studentScoreService.updateStudentScore(id, studentScore)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse("Success", "Student Score Updated Successfully."));

@@ -29,8 +29,6 @@ public class StudentScore {
     private Integer quiz5; // Nilai ujian quiz 5
     private Integer midtest; // Nilai ujian tengah semester
     private Integer finaltest; // Nilai ujian akhir semester
-    @Column(name = "is_active")
-    private boolean isActive = true; // Status aktivitas data skor, defaultnya aktif
 
     public StudentScore() {
 
@@ -136,13 +134,4 @@ public class StudentScore {
         this.finaltest = finaltest;
     }
 
-    // Mendapatkan status aktivitas data skor
-    public boolean isActive() {
-        return isActive;
-    }
-
-    // Mengatur status aktivitas data skor
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 }

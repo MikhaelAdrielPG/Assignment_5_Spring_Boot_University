@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Computer Science\"\r\n}",
+							"raw": "{\r\n  \"name\": \"Software Engineer\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -433,7 +433,7 @@
 			"name": "student score",
 			"item": [
 				{
-					"name": "Create Student Score",
+					"name": "Register Student Score",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -500,7 +500,7 @@
 					"response": []
 				},
 				{
-					"name": "Update Score",
+					"name": "Add/Update Score",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -524,36 +524,6 @@
 								"student-scores",
 								"grade",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Active Status",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"active\": false\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/student-scores/1/deactived",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"student-scores",
-								"1",
-								"deactived"
 							]
 						}
 					},
