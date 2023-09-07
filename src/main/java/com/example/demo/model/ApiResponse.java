@@ -1,8 +1,8 @@
 package com.example.demo.model;
 
 public class ApiResponse {
-    private String status;  // Status yang akan ditampilkan dalam bentuk JSON
-    private String message;   // Pesan yang akan ditampilkan dalam bentuk JSON
+    private String status;
+    private String message;
 
     public ApiResponse(String status, String message) {
         this.status = status;

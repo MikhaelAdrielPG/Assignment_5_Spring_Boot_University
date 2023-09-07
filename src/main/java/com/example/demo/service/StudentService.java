@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Major;
 import com.example.demo.model.Student;
 import com.example.demo.repository.MajorRepository;
 import com.example.demo.repository.StudentRepository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -31,9 +33,10 @@ public class StudentService {
 
     // Fungsi untuk mendapatkan mahasiswa berdasarkan NPM
     public Student getStudentByNpm(String npm) {
-        if (studentRepository.findById(npm).orElse(null) != null
-                && studentRepository.findById(npm).orElse(null).isExist()) {
-            return studentRepository.findById(npm).orElse(null);
+        Optional<Student> student = studentRepository.findById(npm);
+
+        if (student.isPresent() && student.get().isExist()) {
+            return student.get();
         } else {
             return null;
         }
@@ -41,14 +44,16 @@ public class StudentService {
 
     // Fungsi untuk menambahkan mahasiswa baru jika data valid
     public boolean addStudent(Student student) {
-        if (majorRepository.findById(student.getMajor().getId()).orElse(null) == null) {
+        Optional<Major> major = majorRepository.findById(student.getMajor().getId());
+
+        if (!major.isPresent()) {
             return false;
         } else if (isNameNotValid(student.getName())) {
             return false;
         } else if (isNpmNotValid(student.getNpm())) {
             return false;
         } else {
-            student.setMajor(majorRepository.findById(student.getMajor().getId()).orElse(null));
+            student.setMajor(major.get());
             studentRepository.save(student);
             return true;
         }
@@ -56,22 +61,27 @@ public class StudentService {
 
     // Fungsi untuk memperbarui data mahasiswa berdasarkan NPM
     public boolean updateStudent(String npm, Student student) {
-        if (studentRepository.findById(npm).orElse(null) == null) {
+        Optional<Student> studentOptional = studentRepository.findById(npm);
+
+        if (!studentOptional.isPresent()) {
             return false;
         } else if (isNameNotValid(student.getName())) {
             return false;
         } else {
-            studentRepository.findById(npm).orElse(null).setName(student.getName());
-            studentRepository.save(studentRepository.findById(npm).orElse(null));
+            studentOptional.get().setName(student.getName());
+            studentRepository.save(studentOptional.get());
             return true;
         }
     }
 
+
     // Fungsi untuk memperbarui status mahasiswa berdasarkan NPM
     public boolean updateActiveStatus(String npm, Student student) {
-        if (studentRepository.findById(npm).orElse(null) != null) {
-            studentRepository.findById(npm).orElse(null).setActive(student.isActive());
-            studentRepository.save(studentRepository.findById(npm).orElse(null));
+        Optional<Student> studentOptional = studentRepository.findById(npm);
+
+        if (studentOptional.isPresent()) {
+            studentOptional.get().setActive(student.isActive());
+            studentRepository.save(studentOptional.get());
             return true;
         } else {
             return false;
@@ -80,9 +90,11 @@ public class StudentService {
 
     // Fungsi untuk menghapus mahasiswa berdasarkan NPM
     public boolean deleteStudent(String npm) {
-        if (studentRepository.findById(npm).orElse(null) != null) {
-            studentRepository.findById(npm).orElse(null).delete();
-            studentRepository.save(studentRepository.findById(npm).orElse(null));
+        Optional<Student> student = studentRepository.findById(npm);
+
+        if (student.isPresent()) {
+            student.get().delete();
+            studentRepository.save(student.get());
             return true;
         } else {
             return false;

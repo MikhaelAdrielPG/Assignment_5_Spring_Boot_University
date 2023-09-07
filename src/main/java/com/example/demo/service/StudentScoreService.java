@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Course;
+import com.example.demo.model.Student;
 import com.example.demo.model.StudentScore;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.StudentScoreRepository;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentScoreService {
@@ -25,22 +28,23 @@ public class StudentScoreService {
 
     // Fungsi untuk mendapatkan nilai mahasiswa berdasarkan ID
     public StudentScore getStudentScoreById(long id) {
-        if (studentScoreInterface.findById(id).orElse(null) != null) {
-            return studentScoreInterface.findById(id).orElse(null);
-        } else {
-            return null;
-        }
+        Optional<StudentScore> studentScore = studentScoreInterface.findById(id);
+
+        return studentScore.orElse(null);
     }
 
     // Fungsi untuk menambahkan nilai mahasiswa
     public boolean addStudentScore(StudentScore studentScore) {
-        if (studentInterface.findById(studentScore.getStudent().getNpm()).orElse(null) == null) {
+        Optional<Student> student = studentInterface.findById(studentScore.getStudent().getNpm());
+        Optional<Course> course = courseInterface.findById(studentScore.getCourse().getId());
+
+        if (!student.isPresent()) {
             return false;
-        } else if (courseInterface.findById(studentScore.getCourse().getId()).orElse(null) == null) {
+        } else if (!course.isPresent()) {
             return false;
         } else {
-            studentScore.setStudent(studentInterface.findById(studentScore.getStudent().getNpm()).orElse(null));
-            studentScore.setCourse(courseInterface.findById(studentScore.getCourse().getId()).orElse(null));
+            studentScore.setStudent(student.get());
+            studentScore.setCourse(course.get());
             studentScoreInterface.save(studentScore);
             return true;
         }
@@ -48,15 +52,17 @@ public class StudentScoreService {
 
     // Fungsi untuk memperbarui nilai mahasiswa
     public boolean updateStudentScore(long id, StudentScore studentScore) {
-        if (studentScoreInterface.findById(id).orElse(null) != null) {
-            studentScoreInterface.findById(id).orElse(null).setQuiz1(studentScore.getQuiz1());
-            studentScoreInterface.findById(id).orElse(null).setQuiz2(studentScore.getQuiz2());
-            studentScoreInterface.findById(id).orElse(null).setQuiz3(studentScore.getQuiz3());
-            studentScoreInterface.findById(id).orElse(null).setQuiz4(studentScore.getQuiz4());
-            studentScoreInterface.findById(id).orElse(null).setQuiz5(studentScore.getQuiz5());
-            studentScoreInterface.findById(id).orElse(null).setMidtest(studentScore.getMidtest());
-            studentScoreInterface.findById(id).orElse(null).setFinaltest(studentScore.getFinaltest());
-            studentScoreInterface.save(studentScoreInterface.findById(id).orElse(null));
+        Optional<StudentScore> score = studentScoreInterface.findById(id);
+
+        if (score.isPresent()) {
+            score.get().setQuiz1(studentScore.getQuiz1());
+            score.get().setQuiz2(studentScore.getQuiz2());
+            score.get().setQuiz3(studentScore.getQuiz3());
+            score.get().setQuiz4(studentScore.getQuiz4());
+            score.get().setQuiz5(studentScore.getQuiz5());
+            score.get().setMidtest(studentScore.getMidtest());
+            score.get().setFinaltest(studentScore.getFinaltest());
+            studentScoreInterface.save(score.get());
             return true;
         } else {
             return false;

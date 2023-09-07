@@ -26,8 +26,10 @@ public class MajorController {
     // Endpoint untuk mengambil jurusan berdasarkan ID
     @GetMapping("/{id}")
     public ResponseEntity getMajorById(@PathVariable long id) {
-        if (majorService.getMajorById(id) != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(majorService.getMajorById(id));
+        Major major = majorService.getMajorById(id);
+
+        if (major != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(major);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Major Not Found."));

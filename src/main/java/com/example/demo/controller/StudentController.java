@@ -31,8 +31,10 @@ public class StudentController {
     // Endpoint untuk mengambil mahasiswa berdasarkan NPM
     @GetMapping("/{npm}")
     public ResponseEntity getStudentById(@PathVariable String npm) {
-        if (studentService.getStudentByNpm(npm) != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentByNpm(npm));
+        Student student = studentService.getStudentByNpm(npm);
+
+        if (student != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(student);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Student Not Found."));

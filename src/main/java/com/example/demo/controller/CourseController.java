@@ -31,8 +31,10 @@ public class CourseController {
     // Endpoint untuk mengambil kursus berdasarkan ID
     @GetMapping("/{id}")
     public ResponseEntity getCourseById(@PathVariable long id) {
-        if (courseService.getCourseById(id) != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(courseService.getCourseById(id));
+        Course course = courseService.getCourseById(id);
+
+        if (course != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(course);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Course Not Found."));

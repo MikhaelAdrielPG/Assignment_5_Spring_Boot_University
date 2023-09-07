@@ -29,8 +29,10 @@ public class StudentScoreController {
     // Endpoint skor siswa berdasarkan ID
     @GetMapping("/{id}")
     public ResponseEntity getStudentScoreById(@PathVariable int id) {
-        if (studentScoreService.getStudentScoreById(id) != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(studentScoreService.getStudentScoreById(id));
+        StudentScore studentScore = studentScoreService.getStudentScoreById(id);
+
+        if (studentScore != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(studentScore);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Student Score Not Found."));

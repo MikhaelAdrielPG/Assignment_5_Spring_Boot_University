@@ -11,42 +11,37 @@ public class Major {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "major_id")
-    private long id; // ID unik untuk setiap jurusan
-    private String name; // Nama jurusan
+    private long id;
+    private String name;
 
     @Column(name = "deleted_at")
-    private Date deletedAt; // Tanggal ketika jurusan dihapus (null jika belum dihapus)
+    private Date deletedAt;
 
     @JsonIgnore
     @OneToMany(mappedBy = "major")
-    private List<Student> studentList; // Daftar mahasiswa yang terdaftar dalam jurusan ini
+    private List<Student> studentList;
 
     public Major() {
     }
 
-    // Mendapatkan ID jurusan
     public long getId() {
         return id;
     }
 
-    // Mendapatkan nama jurusan
     public String getName() {
         return name;
     }
 
-    // Mengatur nama jurusan dengan menghilangkan spasi di awal dan akhir
     public void setName(String name) {
         this.name = name.trim();
     }
 
-    // Memeriksa apakah jurusan ada atau telah dihapus
     @JsonIgnore
     public boolean isExist() {
-        return deletedAt == null; // Entitas dianggap ada jika deletedAt adalah null
+        return deletedAt == null;
     }
 
-    // Menghapus jurusan dengan mengatur tanggal penghapusan
     public void delete() {
-        this.deletedAt = new Date(); // Menetapkan deletedAt saat menghapus
+        this.deletedAt = new Date();
     }
 }

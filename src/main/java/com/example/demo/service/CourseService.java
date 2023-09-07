@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CourseService {
@@ -28,12 +29,9 @@ public class CourseService {
 
     // Fungsi untuk mendapatkan kursus berdasarkan ID
     public Course getCourseById(long id) {
-        if (courseRepository.findById(id).orElse(null) != null
-                && courseRepository.findById(id).orElse(null).isExist()) {
-            return courseRepository.findById(id).orElse(null);
-        } else {
-            return null;
-        }
+        Optional<Course> course = courseRepository.findById(id);
+
+        return course.orElse(null);
     }
 
     // Fungsi untuk menambahkan kursus baru jika nama valid dan kredit lebih dari 0
@@ -48,22 +46,28 @@ public class CourseService {
 
     // Fungsi untuk memperbarui kursus berdasarkan ID
     public boolean updateCourse(Long id, Course course) {
-         if (courseRepository.findById(id).orElse(null) == null
-                 && !isNameValid(course.getName()) || course.getCredit() <= 0) {
-            return false;
-        } else {
-            courseRepository.findById(id).orElse(null).setName(course.getName());
-            courseRepository.findById(id).orElse(null).setCredit(course.getCredit());
-            courseRepository.save(courseRepository.findById(id).orElse(null));
+        Optional<Course> courseOptional = courseRepository.findById(id);
+
+        if (courseOptional.isPresent() && isNameValid(course.getName()) && course.getCredit() > 0) {
+            Course existingCourse = courseOptional.get();
+            existingCourse.setName(course.getName());
+            existingCourse.setCredit(course.getCredit());
+            courseRepository.save(existingCourse);
             return true;
+        } else {
+
+        return false;
         }
     }
 
+
     // Fungsi untuk memperbarui status kursus berdasarkan ID
     public boolean updateStatus(long id, Course course) {
-        if (courseRepository.findById(id).orElse(null) != null) {
-            courseRepository.findById(id).orElse(null).setActive(course.isActive());
-            courseRepository.save(courseRepository.findById(id).orElse(null));
+        Optional<Course> courseOptional = courseRepository.findById(id);
+
+        if (courseOptional.isPresent()) {
+            courseOptional.get().setActive(course.isActive());
+            courseRepository.save(courseOptional.get());
             return true;
         } else {
             return false;
@@ -72,9 +76,11 @@ public class CourseService {
 
     // Fungsi untuk menghapus kursus berdasarkan ID
     public boolean deleteCourse(Long id) {
-        if (courseRepository.findById(id).orElse(null) != null) {
-            courseRepository.findById(id).orElse(null).delete();
-            courseRepository.save(courseRepository.findById(id).orElse(null));
+        Optional<Course> course = courseRepository.findById(id);
+
+        if (course.isPresent()) {
+            course.get().delete();
+            courseRepository.save(course.get());
             return true;
         } else {
             return false;

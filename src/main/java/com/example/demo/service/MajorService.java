@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MajorService {
@@ -28,9 +29,10 @@ public class MajorService {
 
     // Fungsi untuk mendapatkan jurusan berdasarkan ID
     public Major getMajorById(long id) {
-        if (majorRepository.findById(id).orElse(null) != null
-                && majorRepository.findById(id).orElse(null).isExist()) {
-            return majorRepository.findById(id).orElse(null);
+        Optional<Major> major = majorRepository.findById(id);
+
+        if (major.isPresent() && major.get().isExist()) {
+            return major.get();
         } else {
             return null;
         }
@@ -59,9 +61,11 @@ public class MajorService {
 
     // Fungsi untuk menghapus jurusan berdasarkan ID
     public boolean deleteMajor(Long id) {
-        if (majorRepository.findById(id).orElse(null) != null) {
-            majorRepository.findById(id).orElse(null).delete();
-            majorRepository.save(majorRepository.findById(id).orElse(null));
+        Optional<Major> major = majorRepository.findById(id);
+
+        if (major.isPresent()) {
+            major.get().delete();
+            majorRepository.save(major.get());
             return true;
         } else {
             return false;
