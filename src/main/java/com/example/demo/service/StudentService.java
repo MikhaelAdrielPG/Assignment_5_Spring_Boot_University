@@ -110,13 +110,12 @@ public class StudentService {
         return !npm.matches("\\d{10}");
     }
 
-    // Funsgi utilitas untuk memeriksa validitas nama mahasiswa
-    // Nama mahasiswa dianggap valid jika hanya terdiri dari huruf, angka, dan spasi
-    // Ekspresi regex "[a-zA-Z0-9\\s]+" artinya:
-    // - "[a-zA-Z]": Cocokkan huruf besar atau kecil dari A hingga Z.
-    // - "[0-9]": Cocokkan angka dari 0 hingga 9.
-    // - "\\s": Cocokkan spasi.
-    // "+": Memastikan bahwa satu karakter atau lebih cocok dengan pola ini.
+    /*
+      "[a-zA-Z]": Cocokkan huruf besar atau kecil dari A hingga Z.
+      "[0-9]": Cocokkan angka dari 0 hingga 9.
+      "\\s": Cocokkan spasi.
+      "+": Memastikan bahwa satu karakter atau lebih cocok dengan pola ini.
+     */
     private boolean isNameNotValid(String name) {
         return !name.matches("[a-zA-Z0-9\\s]+");
     }

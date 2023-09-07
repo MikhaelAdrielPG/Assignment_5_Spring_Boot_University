@@ -72,13 +72,12 @@ public class MajorService {
         }
     }
 
-    // Fungsi utilitas untuk memeriksa validitas nama jurusan
-    // Nama jurusan dianggap valid jika hanya terdiri dari huruf, angka, dan spasi
-    // [a-zA-Z0-9\\s]+ artinya:
-    // - [a-zA-Z]: Cocokkan huruf besar atau kecil dari A hingga Z.
-    // - [0-9]: Cocokkan angka dari 0 hingga 9.
-    // - \\s: Cocokkan spasi.
-    // +: Memastikan bahwa satu karakter atau lebih cocok dengan pola yang diberikan.
+    /* [a-zA-Z0-9\\s]+ artinya:
+       [a-zA-Z]: Cocokkan huruf besar atau kecil dari A hingga Z.
+       [0-9]: Cocokkan angka dari 0 hingga 9.
+       \\s: Cocokkan spasi.
+       +: Memastikan bahwa satu karakter atau lebih cocok dengan pola yang diberikan.
+     */
     private boolean isNameValid(String name) {
         return name.matches("[a-zA-Z0-9\\s]+");
     }
