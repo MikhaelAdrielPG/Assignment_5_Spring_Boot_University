@@ -15,28 +15,28 @@ import java.util.Optional;
 @Service
 public class StudentScoreService {
     @Autowired
-    private StudentScoreRepository studentScoreInterface;
+    private StudentScoreRepository studentScoreRepository;
     @Autowired
-    private StudentRepository studentInterface;
+    private StudentRepository studentRepository;
     @Autowired
-    private CourseRepository courseInterface;
+    private CourseRepository courseRepository;
 
     // Fungsi untuk mendapatkan daftar nilai mahasiswa
     public List<StudentScore> studentScoreList() {
-        return studentScoreInterface.findAll();
+        return studentScoreRepository.findAll();
     }
 
     // Fungsi untuk mendapatkan nilai mahasiswa berdasarkan ID
     public StudentScore getStudentScoreById(long id) {
-        Optional<StudentScore> studentScore = studentScoreInterface.findById(id);
+        Optional<StudentScore> studentScore = studentScoreRepository.findById(id);
 
         return studentScore.orElse(null);
     }
 
     // Fungsi untuk menambahkan nilai mahasiswa
     public boolean addStudentScore(StudentScore studentScore) {
-        Optional<Student> student = studentInterface.findById(studentScore.getStudent().getNpm());
-        Optional<Course> course = courseInterface.findById(studentScore.getCourse().getId());
+        Optional<Student> student = studentRepository.findById(studentScore.getStudent().getNpm());
+        Optional<Course> course = courseRepository.findById(studentScore.getCourse().getId());
 
         if (!student.isPresent()) {
             return false;
@@ -45,14 +45,14 @@ public class StudentScoreService {
         } else {
             studentScore.setStudent(student.get());
             studentScore.setCourse(course.get());
-            studentScoreInterface.save(studentScore);
+            studentScoreRepository.save(studentScore);
             return true;
         }
     }
 
     // Fungsi untuk memperbarui nilai mahasiswa
     public boolean updateStudentScore(long id, StudentScore studentScore) {
-        Optional<StudentScore> score = studentScoreInterface.findById(id);
+        Optional<StudentScore> score = studentScoreRepository.findById(id);
 
         if (score.isPresent()) {
             score.get().setQuiz1(studentScore.getQuiz1());
@@ -62,7 +62,7 @@ public class StudentScoreService {
             score.get().setQuiz5(studentScore.getQuiz5());
             score.get().setMidtest(studentScore.getMidtest());
             score.get().setFinaltest(studentScore.getFinaltest());
-            studentScoreInterface.save(score.get());
+            studentScoreRepository.save(score.get());
             return true;
         } else {
             return false;
