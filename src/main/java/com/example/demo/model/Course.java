@@ -1,9 +1,16 @@
 package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -16,6 +23,14 @@ public class Course {
     private int credit;
     @Column(name = "is_actived")
     private boolean isActive = true;
+
+    @CreationTimestamp
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @UpdateTimestamp
+    @Column(name = "update_date")
+    private Date updateDate;
 
     @Column(name = "deleted_at")
     private Date deletedAt;
@@ -58,5 +73,21 @@ public class Course {
 
     public void delete() {
         this.deletedAt = new Date();
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

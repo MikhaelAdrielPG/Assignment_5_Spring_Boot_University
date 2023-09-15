@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.StudentRequest;
 import com.example.demo.model.Major;
 import com.example.demo.model.Student;
 import com.example.demo.repository.MajorRepository;
@@ -21,7 +22,6 @@ public class StudentService {
     // Fungsi untuk mendapatkan daftar mahasiswa yang valid
     public List<Student> studentList() {
         List<Student> filteredStudents = new ArrayList<>();
-
         for (Student student : studentRepository.findAll()) {
             if (student.isExist()) {
                 filteredStudents.add(student);
@@ -43,16 +43,19 @@ public class StudentService {
     }
 
     // Fungsi untuk menambahkan mahasiswa baru jika data valid
-    public boolean addStudent(Student student) {
-        Optional<Major> major = majorRepository.findById(student.getMajor().getId());
+    public boolean addStudent(StudentRequest request) {
+        Optional<Major> major = majorRepository.findById(request.getMajorId());
 
         if (!major.isPresent()) {
             return false;
-        } else if (isNameNotValid(student.getName())) {
+        } else if (isNameNotValid(request.getName())) {
             return false;
-        } else if (isNpmNotValid(student.getNpm())) {
+        } else if (isNpmNotValid(request.getNpm())) {
             return false;
         } else {
+            Student student = new Student();
+            student.setNpm(request.getNpm());
+            student.setName(request.getName());
             student.setMajor(major.get());
             studentRepository.save(student);
             return true;

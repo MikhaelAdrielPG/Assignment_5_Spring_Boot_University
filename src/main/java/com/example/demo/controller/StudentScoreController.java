@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.StudentScoreRequest;
+import com.example.demo.dto.response.StudentScoreResponse;
 import com.example.demo.model.ApiResponse;
 import com.example.demo.model.StudentScore;
 import com.example.demo.service.StudentScoreService;
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/student-scores")
 public class StudentScoreController {
@@ -23,7 +29,14 @@ public class StudentScoreController {
     // Endpoint daftar semua skor siswa
     @GetMapping("")
     public ResponseEntity getStudentScore() {
-        return ResponseEntity.status(HttpStatus.OK).body(studentScoreService.studentScoreList());
+        List<StudentScoreResponse> students = studentScoreService.studentScoreList().stream().map(
+                new Function<StudentScore, StudentScoreResponse>() {
+                    @Override
+                    public StudentScoreResponse apply(StudentScore studentScore) {
+                        return new StudentScoreResponse(studentScore);
+                    }
+                }).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 
     // Endpoint skor siswa berdasarkan ID
@@ -32,7 +45,7 @@ public class StudentScoreController {
         StudentScore studentScore = studentScoreService.getStudentScoreById(id);
 
         if (studentScore != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(studentScore);
+            return ResponseEntity.status(HttpStatus.OK).body(new StudentScoreResponse(studentScore));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Student Score Not Found."));
@@ -41,8 +54,8 @@ public class StudentScoreController {
 
     // Endpoint Menambahkan skor siswa baru
     @PostMapping("")
-    public ResponseEntity addStudentScore(@RequestBody StudentScore studentScore) {
-        if (studentScoreService.addStudentScore(studentScore)) {
+    public ResponseEntity addStudentScore(@RequestBody StudentScoreRequest request) {
+        if (studentScoreService.addStudentScore(request)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse("Success", "Student Score Added Successfully."));
         } else {

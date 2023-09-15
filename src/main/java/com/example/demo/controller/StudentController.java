@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.request.StudentRequest;
+import com.example.demo.dto.response.StudentResponse;
 import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
@@ -16,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/students")
 public class StudentController {
@@ -25,7 +31,14 @@ public class StudentController {
     // Endpoint untuk mengambil daftar semua mahasiswa
     @GetMapping("")
     public ResponseEntity getStudents() {
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.studentList());
+        List<StudentResponse> students = studentService.studentList().stream().map(
+                new Function<Student, StudentResponse>() {
+                    @Override
+                    public StudentResponse apply(Student student) {
+                        return new StudentResponse(student);
+                    }
+                }).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 
     // Endpoint untuk mengambil mahasiswa berdasarkan NPM
@@ -34,7 +47,7 @@ public class StudentController {
         Student student = studentService.getStudentByNpm(npm);
 
         if (student != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(student);
+            return ResponseEntity.status(HttpStatus.OK).body(new StudentResponse(student));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Student Not Found."));
@@ -43,8 +56,8 @@ public class StudentController {
 
     // Endpoint untuk menambahkan mahasiswa baru
     @PostMapping("")
-    public ResponseEntity addStudent(@RequestBody Student student) {
-        if (studentService.addStudent(student)) {
+    public ResponseEntity addStudent(@RequestBody StudentRequest request) {
+        if (studentService.addStudent(request)) {
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ApiResponse("Success", "Student Added Successfully."));
         } else {

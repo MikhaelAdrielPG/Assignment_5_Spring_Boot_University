@@ -18,7 +18,7 @@ public class MajorService {
     public List<Major> majorList() {
         List<Major> filteredMajors = new ArrayList<>();
 
-        for (Major major : majorRepository.findAll()) {
+        for (Major major : majorRepository.findAllByOrderByIdAsc()) {
             if (major.isExist()) {
                 filteredMajors.add(major);
             }

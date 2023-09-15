@@ -1,11 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.request.StudentScoreRequest;
 import com.example.demo.model.Course;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentScore;
 import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.StudentScoreRepository;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.StudentScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,15 +35,24 @@ public class StudentScoreService {
     }
 
     // Fungsi untuk menambahkan nilai mahasiswa
-    public boolean addStudentScore(StudentScore studentScore) {
-        Optional<Student> student = studentRepository.findById(studentScore.getStudent().getNpm());
-        Optional<Course> course = courseRepository.findById(studentScore.getCourse().getId());
+    public boolean addStudentScore(StudentScoreRequest request) {
+        Optional<Student> student = studentRepository.findById(request.getNpm());
+        Optional<Course> course = courseRepository.findById(request.getCourseId());
+
 
         if (!student.isPresent()) {
             return false;
         } else if (!course.isPresent()) {
             return false;
         } else {
+            StudentScore studentScore = new StudentScore();
+            studentScore.setQuiz1(request.getQuiz1());
+            studentScore.setQuiz2(request.getQuiz2());
+            studentScore.setQuiz3(request.getQuiz3());
+            studentScore.setQuiz4(request.getQuiz4());
+            studentScore.setQuiz5(request.getQuiz5());
+            studentScore.setMidtest(request.getMidtest());
+            studentScore.setFinaltest(request.getFinaltest());
             studentScore.setStudent(student.get());
             studentScore.setCourse(course.get());
             studentScoreRepository.save(studentScore);

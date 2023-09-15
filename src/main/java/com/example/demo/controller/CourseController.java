@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.response.CourseResponse;
 import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Course;
 import com.example.demo.service.CourseService;
@@ -16,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
@@ -25,7 +30,14 @@ public class CourseController {
     // Endpoint untuk mengambil daftar semua kursus
     @GetMapping("")
     public ResponseEntity getCourses() {
-        return ResponseEntity.status(HttpStatus.OK).body(courseService.courseList());
+        List<CourseResponse> courses = courseService.courseList().stream().map(
+                new Function<Course, CourseResponse>() {
+                    @Override
+                    public CourseResponse apply(Course course) {
+                        return new CourseResponse(course);
+                    }
+                }).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(courses);
     }
 
     // Endpoint untuk mengambil kursus berdasarkan ID
@@ -34,7 +46,7 @@ public class CourseController {
         Course course = courseService.getCourseById(id);
 
         if (course != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(course);
+            return ResponseEntity.status(HttpStatus.OK).body(new CourseResponse(course));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Course Not Found."));

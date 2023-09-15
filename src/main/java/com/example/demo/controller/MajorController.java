@@ -1,14 +1,24 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.response.MajorResponse;
 import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Major;
 import com.example.demo.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/majors")
@@ -19,8 +29,14 @@ public class MajorController {
     // Endpoint untuk mengambil daftar semua jurusan
     @GetMapping("")
     public ResponseEntity getMajors() {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(majorService.majorList());
+        List<MajorResponse> majors = majorService.majorList().stream().map(
+                new Function<Major, MajorResponse>() {
+                    @Override
+                    public MajorResponse apply(Major major) {
+                        return new MajorResponse(major);
+                    }
+                }).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(majors);
     }
 
     // Endpoint untuk mengambil jurusan berdasarkan ID
@@ -29,7 +45,7 @@ public class MajorController {
         Major major = majorService.getMajorById(id);
 
         if (major != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(major);
+            return ResponseEntity.status(HttpStatus.OK).body(new MajorResponse(major));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("Failed", "Major Not Found."));

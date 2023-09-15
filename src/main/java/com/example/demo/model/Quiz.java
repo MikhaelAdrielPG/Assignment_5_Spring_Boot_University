@@ -9,22 +9,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Date;
-import java.util.List;
 
 @Entity
-@Table(name = "major")
-public class Major {
+@Table(name = "quiz")
+public class Quiz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "major_id")
     private long id;
-    private String name;
 
-    @Column(name = "deleted_at")
-    private Date deletedAt;
+    @ManyToOne
+    private StudentScore studentScore;
+    private String name;
+    private Integer score;
 
     @CreationTimestamp
     @Column(name = "create_date")
@@ -34,15 +33,23 @@ public class Major {
     @Column(name = "update_date")
     private Date updateDate;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "major")
-    private List<Student> studentList;
-
-    public Major() {
+    public Quiz() {
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public StudentScore getStudentScore() {
+        return studentScore;
+    }
+
+    public void setStudentScore(StudentScore studentScore) {
+        this.studentScore = studentScore;
     }
 
     public String getName() {
@@ -50,16 +57,15 @@ public class Major {
     }
 
     public void setName(String name) {
-        this.name = name.trim();
+        this.name = name;
     }
 
-    @JsonIgnore
-    public boolean isExist() {
-        return deletedAt == null;
+    public Integer getScore() {
+        return score;
     }
 
-    public void delete() {
-        this.deletedAt = new Date();
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
     public Date getCreateDate() {
